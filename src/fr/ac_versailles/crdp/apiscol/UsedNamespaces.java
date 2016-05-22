@@ -6,7 +6,9 @@ public enum UsedNamespaces {
 			"http://ltsc.ieee.org/xsd/LOM"), OPENSEARCH("opensearch",
 			"http://a9.com/-/spec/opensearchrss/1.0/"), SVG("svg",
 			"http://www.w3.org/2000/svg"), XHTML("xhtml",
-			"http://www.w3.org/1999/xhtml");
+			"http://www.w3.org/1999/xhtml"), RDF("rdf",
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#"), SKOS("skos",
+			"http://www.w3.org/2004/02/skos/core#");
 	private String shorthand;
 	private String uri;
 
