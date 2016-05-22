@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project>
-<project default="end" basedir="../..">
+<project default="prepare-jquery-apiscol-transfer" basedir="../..">
 	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
 	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
 	<taskdef name="if" classname="net.sf.antcontrib.logic.IfTask" />
@@ -36,7 +36,7 @@
 			</then>
 		</if>
 	</target>
-	<target name="prepare-jquery-apiscol-transfer" depends="ftp-cdn">
+	<target name="prepare-jquery-apiscol-transfer" >
 		<mkdir dir="${jquery.apiscol.temp.dir}" />
 		<if>
 			<equals arg1="${deploy-cdn}" arg2="true" />
