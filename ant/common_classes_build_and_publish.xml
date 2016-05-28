@@ -50,6 +50,11 @@
 			<src path="${src.dir}" />
 			<classpath refid="classpath" />
 		</javac>
+		<copy todir="${build.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.skos" />
+			</fileset>
+		</copy>
 	</target>
 	<target name="archive" depends="compile">
 		<jar destfile="${jar.file}" basedir="${build.dir}">
