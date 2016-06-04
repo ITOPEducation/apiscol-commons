@@ -1,15 +1,18 @@
 <?xml version="1.0"?>
 <!DOCTYPE project>
-<project default="prepare-jquery-apiscol-transfer" basedir="../..">
+<project default="transfer-jquery-apiscol" basedir="../..">
 	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
 	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
 	<taskdef name="if" classname="net.sf.antcontrib.logic.IfTask" />
 	<property name="passwords.dir" value="${basedir}/deploy" />
 	<loadproperties srcFile="${passwords.dir}/properties.common" />
-	<property name="jquery.apiscol.dir" value="${basedir}/ApiScol_Display/apiscol.0.0.0" />
+	<property name="apiscol.version" value="0.0.1" />
+	<property name="jquery.apiscol.dir" value="${basedir}/ApiScol_Display/apiscol.${apiscol.version}" />
+	<property name="cdn.jquery.apiscol.dir" value="${basedir}/ApiScol_CDN/${apiscol.version}" />
 	<property name="jquery.apiscol.temp.dir" value="${basedir}/ApiScol_Display/temp" />
 	<property name="jquery.apiscol.file" value="${jquery.apiscol.dir}/js/jquery.apiscol.js" />
 	<property name="jquery.apiscol.file.temp" value="${jquery.apiscol.temp.dir}/js/jquery.apiscol.js" />
+	<property name="jquery.apiscol.file.cdn" value="${cdn.jquery.apiscol.dir}/js/jquery.apiscol.js" />
 	<property name="xslt.file" value="${basedir}/ApiScol_Meta/src/fr/ac_versailles/crdp/apiscol/meta/resources/xsl/metadataXMLToHTMLTransformer.xsl" />
 	<property name="xslt.file.temp" value="${xslt.file}.temp" />
 	<property name="js.pattern" value="var xsl\s?=\s?&#34;.*&#34;" />
@@ -17,38 +20,17 @@
 	<property name="local.cdn.dir" value="${basedir}/ApiScol_CDN" />
 	<property name="configs.dir" value="${basedir}/ApiScol_Commons/ant/configs" />
 	<xmlproperty file="${configs.dir}/${deploy.target}.deploy.xml" keeproot="true" />
-	<input message="Dispatch xslt file to jquery-apiscol ?" validargs="true,false" addproperty="deploy-cdn" defaultvalue="true" />
-	<input message="Choose dev, demo, test or prod :" validargs="dev,demo,gandi,test,prod" addproperty="deploy.target" defaultvalue="dev" />
-	<target name="ftp-cdn">
-		<if>
-			<equals arg1="${deploy-cdn}" arg2="true" />
-			<then>
-				<ftp action="mkdir" verbose="false" server="${cdn.host}" port="21" remotedir="cdn/${parameters.version}" userid="${cdn.user}" password="${cdn.password}" passive="yes" depends="yes" />
-
-				<ftp verbose="false" server="${cdn.host}" port="21" remotedir="cdn" userid="${cdn.user}" password="${cdn.password}" passive="yes" depends="yes">
-					<fileset dir="${local.cdn.dir}" excludes="**/jquery.apiscol.js*">
-					</fileset>
-				</ftp>
-				<ftp verbose="false" server="${cdn.host}" port="21" remotedir="cdn/${parameters.version}" userid="${cdn.user}" password="${cdn.password}" passive="yes" depends="yes">
-					<fileset dir="${jquery.apiscol.dir}" excludes="**/jquery.apiscol.js*">
-					</fileset>
-				</ftp>
-			</then>
-		</if>
-	</target>
-	<target name="prepare-jquery-apiscol-transfer" >
+	<target name="prepare-jquery-apiscol-transfer">
 		<mkdir dir="${jquery.apiscol.temp.dir}" />
-		<if>
-			<equals arg1="${deploy-cdn}" arg2="true" />
-			<then>
-				<echo message="Copying xslt in jquery apiscol file" />
-				<copy file="${xslt.file}" tofile="${xslt.file.temp}" overwrite="true" />
-				<copy file="${jquery.apiscol.file}" tofile="${jquery.apiscol.file.temp}" overwrite="true" />
-				<replaceregexp file="${xslt.file.temp}" match='[\n\r]' flags="gi" replace=" ">
-				</replaceregexp>
-				<replaceregexp file="${xslt.file.temp}" match='\\' flags="gi" replace='\\\\\\\\'>
-				</replaceregexp>
-				<replaceregexp file="${xslt.file.temp}" match='["]' flags="gi" replace="\\\\&#34;">
+
+		<echo message="Copying xslt in jquery apiscol file" />
+		<copy file="${xslt.file}" tofile="${xslt.file.temp}" overwrite="true" />
+		<copy file="${jquery.apiscol.file}" tofile="${jquery.apiscol.file.temp}" overwrite="true" />
+		<replaceregexp file="${xslt.file.temp}" match='[\n\r]' flags="gi" replace=" ">
+		</replaceregexp>
+		<replaceregexp file="${xslt.file.temp}" match='\\' flags="gi" replace='\\\\\\\\'>
+		</replaceregexp>
+		<replaceregexp file="${xslt.file.temp}" match='["]' flags="gi" replace="\\\\&#34;">
 								</replaceregexp>
 								<replaceregexp file="${xslt.file.temp}" match='\\' flags="gi" replace='\\\\\\\\'>
 												</replaceregexp>
@@ -61,20 +43,16 @@
 								<property name="jsline" value="var xsl=&#34;${xsl}&#34;"></property>
 									<replaceregexp file="${jquery.apiscol.file.temp}" match="${js.pattern}" replace="${jsline}"></replaceregexp>
 									<replaceregexp file="${jquery.apiscol.file.temp}" match="${version.pattern}" replace="${parameters.version}"></replaceregexp>
-					</then>
-				</if>
+
 		
 	</target>
 	<target name="transfer-jquery-apiscol" depends="prepare-jquery-apiscol-transfer">
-		<if>
-			<equals arg1="${deploy-cdn}" arg2="true" />
-			<then>
-				<echo message="Transfering jquery apiscol file" />
-			<ftp verbose="false" server="${cdn.host}" port="21" remotedir="/cdn/${parameters.version}/js" userid="${cdn.user}" password="${cdn.password}" passive="yes" depends="yes">
-				<fileset file="${jquery.apiscol.file.temp}"></fileset>
-			</ftp>
-				</then>
-		</if>
+		<copy todir="${cdn.jquery.apiscol.dir}">
+		    <fileset dir="${jquery.apiscol.dir}">
+		      <exclude name="js/jquery.apiscol.js" />
+		    </fileset>
+		  </copy>
+		<copy file="${jquery.apiscol.file.temp}" tofile="${jquery.apiscol.file.cdn}"></copy>
 		</target>
 
 
