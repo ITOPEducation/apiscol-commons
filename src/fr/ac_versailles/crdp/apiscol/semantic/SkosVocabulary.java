@@ -69,7 +69,10 @@ public class SkosVocabulary {
 		}
 
 		try {
-			prefLabel = (String) exp.evaluate(skosXml, XPathConstants.STRING);
+			if (exp != null) {
+				prefLabel = (String) exp.evaluate(skosXml,
+						XPathConstants.STRING);
+			}
 		} catch (XPathExpressionException e) {
 			logger.error("Error while trying to fetch preflabel for uri " + uri
 					+ " with message " + e.getMessage());
