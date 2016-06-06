@@ -26,7 +26,7 @@ import fr.ac_versailles.crdp.apiscol.UsedNamespaces;
 
 public class XMLUtils {
 
-	public static String XMLToString(Document doc) {
+	public static String XMLToString(Document doc, Boolean singleLine) {
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer transformer = null;
 		try {
@@ -41,7 +41,16 @@ public class XMLUtils {
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
-		return writer.getBuffer().toString().replaceAll("\n|\r", "");
+		String string = writer.getBuffer().toString();
+		if (!singleLine) {
+			return string;
+		}
+		return string.replaceAll("\n|\r", "");
+
+	}
+
+	public static String XMLToString(Document doc) {
+		return XMLToString(doc, true);
 
 	}
 
