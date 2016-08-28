@@ -16,7 +16,7 @@
 	</property>
 	<property name="ivy.dep.file" value="${ant.dir}/ivy-apiscol.xml">
 	</property>
-	<property name="revision" value="1.5">
+	<property name="revision" value="1.6">
 	</property>
 	<property name="jar.file" value="apiscol-commons-${revision}.jar" />
 	<path id="classpath">
@@ -49,12 +49,7 @@
 		<javac debug="true" destdir="${build.dir}" includeantruntime="true" includejavaruntime="true" verbose="false">
 			<src path="${src.dir}" />
 			<classpath refid="classpath" />
-		</javac>
-		<copy todir="${build.dir}">
-			<fileset dir="${src.dir}">
-				<include name="**/*.skos" />
-			</fileset>
-		</copy>
+		</javac>		
 	</target>
 	<target name="archive" depends="compile">
 		<jar destfile="${jar.file}" basedir="${build.dir}">

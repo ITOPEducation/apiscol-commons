@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.apache.naming.NamingContext;
 
 import fr.ac_versailles.crdp.apiscol.auth.oauth.OauthServersProxy;
-import fr.ac_versailles.crdp.apiscol.semantic.SkosVocabulary;
 import fr.ac_versailles.crdp.apiscol.transactions.KeyLock;
 import fr.ac_versailles.crdp.apiscol.transactions.KeyLockManager;
 import fr.ac_versailles.crdp.apiscol.utils.LogUtility;
@@ -30,7 +29,6 @@ public class ApiscolApi {
 	private static Logger logger;
 	protected static String version;
 	private static NamingContext initialContextContainer;
-	public static SkosVocabulary skosVocabulary;
 	protected KeyLockManager keyLockManager;
 	private HashMap<String, String> dbConnexionParameters;
 	private HashMap<String, String> oauthConnexionParameters;
@@ -231,17 +229,6 @@ public class ApiscolApi {
 		}
 		getLogger()
 				.info("Successfully feteched instance of OauthServersProxy from servlet context");
-	}
-
-	protected void fetchSkosVocabulary(ServletContext context) {
-		skosVocabulary = (SkosVocabulary) context
-				.getAttribute(SkosVocabulary.ENVIRONMENT_PARAMETER_KEY);
-		if (!(skosVocabulary instanceof SkosVocabulary)) {
-			getLogger()
-					.error("Impossible to fetch instance of SkosVocabulary from servlet context");
-		}
-		getLogger()
-				.info("Successfully fetched instance of SkosVocabulary from servlet context");
 	}
 
 	public static Logger getLogger() {
