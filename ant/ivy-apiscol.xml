@@ -28,7 +28,9 @@
 			<dependency org="com.sun.jersey" name="jersey-client" rev="1.17.1" />
 		<dependency org="commons-lang" name="commons-lang" rev="2.6"
 			conf="commons->default" />
-		<dependency org="log4j" name="log4j" rev="1.2.17"/>
+		<dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.6.2" />
+		<dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.6.2"/>
+		<dependency org="org.apache.logging.log4j" name="log4j-1.2-api" rev="2.6.2" />
             		<dependency org="joda-time" name="joda-time" rev="2.2"
 			conf="commons->default" />
 		<dependency org="org.mongodb" name="mongo-java-driver" rev="2.11.0"
